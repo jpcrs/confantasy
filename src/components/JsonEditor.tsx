@@ -1,6 +1,8 @@
-import { useState } from "react";
-import JSONInput from "react-json-editor-ajrm";
-import locale from "react-json-editor-ajrm/locale/en";
+import { useRef, useState } from "react";
+import { editor } from 'monaco-editor';
+import Editor from "@monaco-editor/react";
+import { EditorHeader } from "./EditorHeader";
+import { EditorFooter } from "./EditorFooter";
 
 const object = {
   code: "d9d4f495e875a2e075a1a4a6e1b9770f",
@@ -20,74 +22,28 @@ var cfg: { [key: string]: string; } = {
 
 
 export function JsonEditor() {
+  const monacoOptions: editor.IStandaloneEditorConstructionOptions & editor.IEditorScrollbarOptions = {
+    selectOnLineNumbers: true,
+    roundedSelection: false,
+    minimap: { enabled: false },
+  }
+
   const [items, setItems] = useState<{ [key: string]: string; }>(cfg);
   const [currentSelection, setCurrentSelection] = useState<string>("constellation");
+
   return (
-    <div className="divide-y-[1px] divide-brand-100 w-full h-full flex flex-col gap-0 justify-evenly">
-      <div className="flex flex-grow gap-2 justify-evenly h-1/5 pb-1 transition">
-        {Object.entries(cfg).map(([key, value]) => {
-          return (
-            <button
-              key={key}
-              className={`${currentSelection === key ? 'border-b-2 border-brand-100 text-brand-100' : ''} h-8 text-sm w-full focus:outline-none`}
-              onClick={() => {
-                setCurrentSelection(key);
-              }}
-            >
-              {key}
-            </button>
-          );
-        })}
-      </div>
-      <div>
-        <JSONInput
-          placeholder={JSON.parse(items[currentSelection] == "" ? "{}" : items[currentSelection])} // data to display
-          locale={locale}
-          colors={{
-            string: "#DAA520", // overrides theme colors with whatever color value you want
-          }}
-          onChange={(value: any) => {
-            console.log(value);
-            cfg[currentSelection] = value.json;
-            setItems(cfg);
-          }}
-          // height='400px'
-          width="100%"
-          style={{
-            container: {
-              width: "100%",
-            },
-            body: {
-              width: "100%",
-            },
-            outerBox: {
-              width: "100%",
-            },
-            contentBox: {
-              width: undefined,
-              flex: 1,
-            },
-            warningBox: {
-              width: "100%",
-            },
-          }}
+    <div className="w-full h-full flex flex-col gap-0 justify-evenly">
+      <EditorHeader currentSelection={currentSelection} setCurrentSelection={setCurrentSelection} />
+      <div className="w-full h-1/2">
+        <Editor
+          height="70vh"
+          defaultLanguage="json"
+          value={JSON.stringify(JSON.parse(items[currentSelection] == "" ? "{}" : items[currentSelection]), null, '\t')}
+          options={monacoOptions}
+          theme="vs-dark"
         />
       </div>
-      <div className="flex justify-around pt-2 gap-12 px-4 h-1/4">
-        <button 
-          className="bg-brand-100 text-white text-sm font-bold rounded-md focus:outline-none w-1/4"
-          onClick={() => {
-            let itemsToUpdate = JSON.parse(items["constellation"]);
-            itemsToUpdate.directory += "\\";
-            console.log(itemsToUpdate.directory);
-            items["constellation"] = JSON.stringify(itemsToUpdate);
-            console.log(items)
-        }}>Apply</button>
-        <input className="text-sm bg-transparent rounded-md border border-brand-100 focus:border-brand-100 focus:ring-brand-100 focus:ring-1 focus:outline-none"></input>
-        <button 
-          className="bg-brand-100 text-white text-sm font-bold rounded-md focus:outline-none w-1/4 -ml-10"
-        >Save</button>
-      </div>
+      <EditorFooter items={items} setItems={setItems}/>
     </div>
   );
 }
