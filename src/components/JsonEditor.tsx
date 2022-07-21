@@ -36,7 +36,7 @@ export function JsonEditor() {
       <EditorHeader currentSelection={currentSelection} setCurrentSelection={setCurrentSelection} />
       <div className="w-full h-1/2">
         <Editor
-          height="70vh"
+          height="60vh"
           defaultLanguage="json"
           value={JSON.stringify(JSON.parse(items[currentSelection] == "" ? "{}" : items[currentSelection]), null, '\t')}
           options={monacoOptions}
