@@ -1,18 +1,15 @@
 import { Config } from "./Types";
 
-export async function TrySetConfig(setConfig: (cfg: Config) => void, key?: string, cfg?: Config): Promise<boolean>
+export async function GetConfig(key?: string): Promise<Config>
 {
-  if (cfg === undefined)
+  const rep = await fetch(`https://fantasy.cat/api.php?key=${key}&software=constellation&cmd=getConfiguration`);
+  const repContent = await rep.text();
+  if (repContent === "fantasy.cat license key invalid.")
   {
-    const rep = await fetch(`https://fantasy.cat/api.php?key=${key}&software=constellation&cmd=getConfiguration`);
-    const repContent = await rep.text();
-    if (repContent === "fantasy.cat license key invalid.")
-    {
-      return false;
-    }
-
-    cfg = JSON.parse(repContent) as Config;
+    return {};
   }
+
+  const cfg = JSON.parse(repContent) as Config;
 
   Object.entries(cfg).forEach(([key, value]) => {
     if (value === "")
@@ -20,7 +17,18 @@ export async function TrySetConfig(setConfig: (cfg: Config) => void, key?: strin
   });
 
   localStorage.setItem('currentSettings', JSON.stringify(cfg));
-  setConfig(cfg);
+
+  return cfg;
+}
+
+export async function VerifyKey(key: string): Promise<boolean>
+{
+  const rep = await fetch(`https://fantasy.cat/api.php?key=${key}&software=constellation&cmd=getConfiguration`);
+  const repContent = await rep.text();
+  if (repContent === "fantasy.cat license key invalid.")
+  {
+    return false;
+  }
 
   return true;
 }

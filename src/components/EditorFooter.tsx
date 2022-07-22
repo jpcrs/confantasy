@@ -1,5 +1,5 @@
 import React from "react";
-import { SubmitConfig, TrySetConfig } from "../helpers/Helpers";
+import { GetConfig, SubmitConfig } from "../helpers/Helpers";
 import { useEffect, useState } from 'react';
 import { Config } from "../helpers/Types";
 
@@ -23,7 +23,8 @@ export function EditorFooter({ config, setConfig, currentSelection, showSubmitBu
   const refreshSettingsWithServer = async function() {
     const key = localStorage.getItem('key');
     if (key) {
-      await TrySetConfig(setConfig, key);
+      const cfg = await GetConfig(key);
+      setConfig(cfg);
     }
     setSelectedSetting(".");
   }
