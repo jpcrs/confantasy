@@ -62,7 +62,7 @@ export function EditorFooter({ config, setConfig, currentSelection, showSubmitBu
   return (
     <>
       <div className="flex justify-around pt-2 gap-12 px-4 h-1/4">
-        <input className="pl-1 h-6 text-sm bg-transparent rounded-md border border-brand-100 focus:border-brand-100 focus:ring-brand-100 focus:ring-1 focus:outline-none placeholder:text-zinc-600 w-3/4" placeholder="Settings name..." value={newSettingName} onChange={(event) => setNewSettingsName(event.target.value)}></input>
+        <input className="pl-1 h-6 text-sm bg-transparent rounded-md border border-brand-100 focus:border-brand-100 focus:ring-brand-100 focus:ring-1 focus:outline-none placeholder:text-zinc-600 w-3/4" placeholder="New config name..." value={newSettingName} onChange={(event) => setNewSettingsName(event.target.value)}></input>
         <button className="h-6 bg-brand-100 text-white text-sm font-bold rounded-md focus:outline-none w-1/4 -ml-10 disabled:opacity-30" onClick={createNewSetting} disabled={!newSettingName}>
           Save
         </button>
@@ -86,7 +86,7 @@ export function EditorFooter({ config, setConfig, currentSelection, showSubmitBu
           className="bg-brand-100 text-white text-sm font-bold h-10 focus:outline-none w-full border-r-2 border-back-100"
           onClick={refreshSettingsWithServer}
         >
-          Refresh
+          Refresh Config
         </button>
         <button
           className="bg-brand-100 text-white text-sm font-bold h-10 focus:outline-none w-full disabled:opacity-30"
@@ -96,7 +96,7 @@ export function EditorFooter({ config, setConfig, currentSelection, showSubmitBu
           }}
           disabled={!showSubmitButton}
         >
-          Apply
+          Apply Config
         </button>
       </div>
     </>
