@@ -1,20 +1,24 @@
 import { useState } from "react";
+import { TrySetConfig } from "../helpers/Helpers";
+import { Config } from "../helpers/Types";
 
 interface LicenseKeyProps {
   onValidateLicense: () => void;
-  onSetConfig: (cfg: {}) => void;
+  setConfig: (cfg: Config) => void;
 }
 
-export function LicenseKey({ onValidateLicense, onSetConfig }: LicenseKeyProps) {
+export function LicenseKey({ onValidateLicense, setConfig }: LicenseKeyProps) {
   const [licenseKey, setLicenseKey] = useState<string>("");
 
-  const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleValueChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setLicenseKey(e.target.value);
     const regex = /^([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})$/;
     if (regex.test(e.target.value)) {
-      console.log("License key is valid");
-      onSetConfig({ blah: 123});
+      if (!await TrySetConfig(setConfig, e.target.value))
+        setLicenseKey("");
+
       onValidateLicense();
+      localStorage.setItem('key', e.target.value);
     }
   };
 
