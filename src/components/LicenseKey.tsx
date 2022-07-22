@@ -15,7 +15,10 @@ export function LicenseKey({ onValidateLicense, setConfig }: LicenseKeyProps) {
     const regex = /^([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})$/;
     if (regex.test(e.target.value)) {
       if (!await TrySetConfig(setConfig, e.target.value))
+      {
         setLicenseKey("");
+        return;
+      }
 
       onValidateLicense();
       localStorage.setItem('key', e.target.value);
